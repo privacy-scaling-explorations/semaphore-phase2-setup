@@ -16,8 +16,11 @@ We will apply a random beacon. We use the VDF Alliance's verifiable delay
 function output API. Their system takes about 30 minutes to generate a VDF
 output of an Ethereum block hash. They do not run this process on every block.
 They simply pick the latest available block whenever they compute a VDF output.
+
 As such, we will choose the VDF output of the blockhash of the block closest
-and prior to block #____. Finally, we will apply ___ rounds of the ___ hash
+and prior to block #____.
+
+Finally, we will apply ___ rounds of the ___ hash
 algorithm to the output and use the result as our random beacon.
 
 - Using the `ppot_fix` branch of
