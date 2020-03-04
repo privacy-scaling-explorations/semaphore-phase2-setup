@@ -19,12 +19,9 @@ We will use [challenge
 from Perpetual Powers of Tau as the starting point.
 
 We will apply a random beacon. We use the VDF Alliance's verifiable delay
-function output API. Their system takes about 30 minutes to generate a VDF
-output of an Ethereum block hash. They do not run this process on every block.
-They simply pick the latest available block whenever they compute a VDF output.
+function, with the [RSA-2048 modulus](https://en.wikipedia.org/wiki/RSA_numbers#RSA-2048). We will run the VDF for a duration of 600 minutes on an Ethereum block hash which we'll announce. We choose 600 minutes to be on the safe side - assuming an Ethereum block hash is considered to be somewhat final after 6 minutes, we could take a 6 minute VDF, if the VDF was optimal. While the current VDF service for 2048 bits already use an optimized implementation on an FPGA, it's still in progress, so we assume that a motivated attacker could develop a better one, with an extreme 100x advantage, so we run the VDF for 6\*100 minutes instead.
 
-As such, we will choose the VDF output of the blockhash of the block closest
-and prior to block #____.
+As such, we will choose the VDF output of the blockhash of block #____.
 
 Finally, we will apply ____ rounds of the SHA256 hash
 algorithm to the output and use the result as our random beacon. The
