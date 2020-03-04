@@ -53,6 +53,9 @@ cargo run --release --bin verify_contribution circuit.json circom<n>.params circ
 
 And send `circom<n+1>.params` to the next participant.
 
+When the UI is ready, we will verify all contributions and start from the latest
+`.params` file.
+
 At the end of the ceremony, we will generate the proving and verifying keys:
 
 ```bash
