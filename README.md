@@ -19,11 +19,20 @@ We will use [challenge
 from Perpetual Powers of Tau as the starting point.
 
 We will apply a random beacon. We use the VDF Alliance's verifiable delay
-function, with the [RSA-2048 modulus](https://en.wikipedia.org/wiki/RSA_numbers#RSA-2048). We will run the VDF for a duration of 600 minutes on an Ethereum block hash which we'll announce. We choose 600 minutes to be on the safe side - assuming an Ethereum block hash is considered to be somewhat final after 6 minutes, we could take a 6 minute VDF, if the VDF was optimal. While the current VDF service for 2048 bits already use an optimized implementation on an FPGA, it's still in progress, so we assume that a motivated attacker could develop a better one, with an extreme 100x advantage, so we run the VDF for 6\*100 minutes instead.
+function, with the [RSA-2048
+modulus](https://en.wikipedia.org/wiki/RSA_numbers#RSA-2048). We will run the
+VDF for a duration of ___ minutes on an Ethereum block hash which we'll
+announce. We choose ___ minutes to be on the safe side - assuming an Ethereum
+block hash is considered to be somewhat final after 6 minutes, we could take a
+6 minute VDF, if the VDF was optimal. While the current VDF service for 2048
+bits already use an optimized implementation on an FPGA, it's still in
+progress, so we assume that a motivated attacker could develop a better one,
+with an extreme 100x advantage, so we run the VDF for `___\*100` minutes
+instead.
 
 As such, we will choose the VDF output of the blockhash of block #____.
 
-Finally, we will apply ____ rounds of the SHA256 hash
+Finally, we will apply `2 ^ 42 = 4398046511104` rounds of the SHA256 hash
 algorithm to the output and use the result as our random beacon. The
 `phase2-bn254` software's `beacon_constrained` binary will do this for us.
 
@@ -97,6 +106,11 @@ cargo run --release --bin contribute circom<n>.params circom<n+1>.params <random
 ```
 
 Send the `circom<n+1>.params` file to the coordinator.
+
+Please also write an
+attestation to your contribution and sign it with a GPG key, Keybase account,
+or Ethereum account using the example
+[here](https://github.com/weijiekoh/perpetualpowersoftau/blob/master/README.md#your-attestation).
 
 ## Test run
 
