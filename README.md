@@ -8,9 +8,10 @@ automates this process.
 
 ## Ceremony progress
 
-| Participant ID | Identity | GPG key | Attestation |
-|-|-|-|-|
-| 0001 | Koh Wei Jie | [Keybase](https://keybase.io/contactkohweijie) | [0001_weijie_response](./0001_weijie_response/README.md) |
+TODO
+<!--| Participant ID | Identity | GPG key | Attestation |-->
+<!--|-|-|-|-|-->
+<!--| 0001 | Koh Wei Jie | [Keybase](https://keybase.io/contactkohweijie) | [0001_weijie_response](./0001_weijie_response/README.md) |-->
 
 ## How we will prepare for the ceremony
 
@@ -111,6 +112,15 @@ Please also write an
 attestation to your contribution and sign it with a GPG key, Keybase account,
 or Ethereum account using the example
 [here](https://github.com/weijiekoh/perpetualpowersoftau/blob/master/README.md#your-attestation).
+
+## Logistics
+
+To be confirmed: each participant needs to download a 22M `.params` file and
+upload a 22M `.params` file. The computation time should take no more than a
+minute on a modern laptop.
+
+For convenience, we will use Dropbox to share the `.params` files. The
+coordinator will back them up to Azure blob storage and IPFS.
 
 ## Test run
 
