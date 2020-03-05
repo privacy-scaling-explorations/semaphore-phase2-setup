@@ -30,7 +30,7 @@ progress, so we assume that a motivated attacker could develop a better one,
 with an extreme 1000x advantage, so we run the VDF for `6 * 1000` minutes
 instead.
 
-As such, we will choose the VDF output of the blockhash of block #____.
+As such, we will choose the VDF output of the blockhash of block 9619000.
 
 Finally, we will apply `2 ^ 42 = 4398046511104` rounds of the SHA256 hash
 algorithm to the output and use the result as our random beacon. The
