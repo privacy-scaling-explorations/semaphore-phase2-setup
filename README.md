@@ -113,7 +113,7 @@ First, set up a Linux machine and install Rust and Cargo following instructions 
 Download and compile the required source code:
 
 ```bash
-git clone https://github.com/kobigurk/phase2-bn254.git --branch semaphore-setup && \
+git clone https://github.com/kobigurk/phase2-bn254.git --branch ppot_fix && \
 cd phase2-bn254/phase2 && \
 cargo build --release
 ```
