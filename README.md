@@ -33,6 +33,18 @@ instead.
 
 As such, we will choose the VDF output of the blockhash of block 9619000.
 
+The block hash is:
+
+```
+0x35ffdfc6198abafc21076172b0fb01c4eaf3d15d11a74e6df287ba2694e70b08
+```
+
+And the decimal used:
+
+```
+24424671406626258651438443984939281088426878021704265060668075761164561615624
+```
+
 Finally, we will apply `2 ^ 42 = 4398046511104` rounds of the SHA256 hash
 algorithm to the output and use the result as our random beacon. The
 `phase2-bn254` software's `beacon_constrained` binary will do this for us.
@@ -152,7 +164,19 @@ Contributing on top of the hash:
         7d50735c 449af38a 76d9ac9c 81af7e2a
 Computing and writing your contribution, this could take a while...
 Done processing 2097151 powers of tau
+...
+Done processing 536870910 powers of tau
+Finihsing writing your contribution to `./response`...
+Done!
 
+Your contribution has been written to `./response`
+
+The BLAKE2b hash of `./response` is:
+        52daebb5 4b113656 f7367e29 7d430394
+        da749ab9 b6e195da 1d3499ea b63aeacc
+        d4e0a252 9ab06ef0 be1c4eb6 d01b3442
+        feb12c9d c0523a8c a2331d66 ffb561e8
+Thank you for your participation, much appreciated! :)
 ```
 
-<!--4. Ran `prepare_phase2`.-->
+4. Ran `prepare_phase2`.
