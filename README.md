@@ -45,6 +45,14 @@ And the decimal used:
 24424671406626258651438443984939281088426878021704265060668075761164561615624
 ```
 
+```
+mpz_set_str(
+    x_in,
+    "35ffdfc6198abafc21076172b0fb01c4eaf3d15d11a74e6df287ba2694e70b08",
+    16
+);
+```
+
 Finally, we will apply `2 ^ 42 = 4398046511104` rounds of the SHA256 hash
 algorithm to the output and use the result as our random beacon. The
 `phase2-bn254` software's `beacon_constrained` binary will do this for us.
