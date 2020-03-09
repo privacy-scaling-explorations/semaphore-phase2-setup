@@ -16,7 +16,7 @@ TODO
 ## How we will prepare for the ceremony
 
 We will use [challenge
-0023](https://github.com/weijiekoh/perpetualpowersoftau/tree/master/0022_roman_response)
+0024](https://github.com/weijiekoh/perpetualpowersoftau/tree/master/0023_shomari_response)
 from Perpetual Powers of Tau as the starting point.
 
 We will apply a random beacon. We use the VDF Alliance's verifiable delay
