@@ -63,8 +63,11 @@ output of the VDF (4044943820224 iterations) is:
 Use [verify_proof.py](this script) to verify the proof.
 
 We are currently running `2 ^ 42 = 4398046511104` rounds of the SHA256 hash
-algorithm to the output and use the result as our random beacon. The
-`phase2-bn254` software's `beacon_constrained` binary will do this for us.
+algorithm to the SHA256 hash of the output and use the result as our random
+beacon. The SHA256 hash of the VDF output is
+`efed6b7c6e565e539d2d08cf77e73b0bc07657090ffb477da1d1eea7d7852592`, and we use
+[this software](https://github.com/kobigurk/verify-beacon) to perform the
+iterated hashes.
 
 - Using the `ppot_fix` branch of
   [phase2-bn254](https://github.com/kobigurk/phase2-bn254), we will modify
