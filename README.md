@@ -15,9 +15,8 @@ TODO
 
 ## How we will prepare for the ceremony
 
-We will use [challenge
-0023](https://github.com/weijiekoh/perpetualpowersoftau/tree/master/0022_roman_response)
-from Perpetual Powers of Tau as the starting point.
+We will use the latest available challenge file from the Perpetual Powers of
+Tau ceremony as the starting point.
 
 We will apply a random beacon. We use the VDF Alliance's verifiable delay
 function, with the [RSA-2048
@@ -53,7 +52,17 @@ mpz_set_str(
 );
 ```
 
-Finally, we will apply `2 ^ 42 = 4398046511104` rounds of the SHA256 hash
+We collaborated with [Supranational](https://www.supranational.net/), a member
+of the [VDF Alliance](https://www.vdfalliance.org/), to compute the VDF. The
+output of the VDF (4044943820224 iterations) is:
+
+```
+19144252799650690034532093004610517021943100624121228597352889552995687583621339173190502851029907816310407126300686460714009475968112570316274914525310332357507812899123293094648071211640233190710113953260309441777021673998373218670925180551926263064212339548461470232903440429813254769673580307982104275746012049516178273456199635063347683510167860883901215428056724337210897211547353523524300903538679417056679618824614750731361045253660460133221495280406246845045128191812422560355330733281117986696463831747104084345232282788677597701004579630458791913453885010191791670442208877522732218605629867820033633850103
+```
+
+Use [verify_proof.py](this script) to verify the proof.
+
+We are currently running `2 ^ 42 = 4398046511104` rounds of the SHA256 hash
 algorithm to the output and use the result as our random beacon. The
 `phase2-bn254` software's `beacon_constrained` binary will do this for us.
 
