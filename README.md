@@ -15,8 +15,8 @@ TODO
 
 ## How we will prepare for the ceremony
 
-We will use the latest available challenge file from the Perpetual Powers of
-Tau ceremony as the starting point.
+We will use the 26th challenge file from the Perpetual Powers of
+Tau ceremony as the starting point (challenge file hash TBD).
 
 We will apply a random beacon. We use the VDF Alliance's verifiable delay
 function, with the [RSA-2048
@@ -44,6 +44,7 @@ And the decimal used:
 24424671406626258651438443984939281088426878021704265060668075761164561615624
 ```
 
+The value is fed into the VDF calculation using this snippet:
 ```
 mpz_set_str(
     x_in,
@@ -54,23 +55,16 @@ mpz_set_str(
 
 We collaborated with [Supranational](https://www.supranational.net/), a member
 of the [VDF Alliance](https://www.vdfalliance.org/), to compute the VDF. The
-output of the VDF (4044943820224 iterations) is:
+output of the VDF (4044943820224 iterations, which take 6000 minutes) is:
 
 ```
 19144252799650690034532093004610517021943100624121228597352889552995687583621339173190502851029907816310407126300686460714009475968112570316274914525310332357507812899123293094648071211640233190710113953260309441777021673998373218670925180551926263064212339548461470232903440429813254769673580307982104275746012049516178273456199635063347683510167860883901215428056724337210897211547353523524300903538679417056679618824614750731361045253660460133221495280406246845045128191812422560355330733281117986696463831747104084345232282788677597701004579630458791913453885010191791670442208877522732218605629867820033633850103
 ```
 
-Use [verify_proof.py](this script) to verify the proof.
-
-We are currently running `2 ^ 42 = 4398046511104` rounds of the SHA256 hash
-algorithm to the SHA256 hash of the output and use the result as our random
-beacon. The SHA256 hash of the VDF output is
-`efed6b7c6e565e539d2d08cf77e73b0bc07657090ffb477da1d1eea7d7852592`, and we use
-[this software](https://github.com/kobigurk/verify-beacon) to perform the
-iterated hashes.
+Use [verify_proof.py](this script) to verify the VDF proof. This follows the [proof of correctness by Wesolowski](https://eprint.iacr.org/2018/623.pdf).
 
 - Using the `ppot_fix` branch of
-  [phase2-bn254](https://github.com/kobigurk/phase2-bn254), we will modify
+  [phase2-bn254](https://github.com/kobigurk/phase2-bn254) (commit hash 52a9479810f583c58156db292c0a3762ee790af7), we will modify
   the source code (as the random beacon is hardcoded), rebuild the
   binaries, and use `beacon_constrained` to produce a `response`.
 
@@ -79,7 +73,7 @@ iterated hashes.
 
 Next, we will initialise the phase2 ceremony.
 
-- Using the `master` branch of phase2-bn254, we will run the `phase2` `new` binary: 
+- Using the `master` branch of phase2-bn254 (commit hash 5d82e40bb7361d422ff6b68a733a14662a16aa05), we will run the `phase2` `new` binary: 
 
 ```bash
 cargo run --release --bin new circuit.json circom1.params
