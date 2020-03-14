@@ -17,8 +17,8 @@ TODO
 
 ### 1. The challenge file
 
-We will use the 26th challenge file from the Perpetual Powers of Tau ceremony
-as the starting point. The Blake2b hash of the challenge file is:
+We will use the following challenge file from the Perpetual Powers of Tau
+ceremony as the starting point. The Blake2b hash of the challenge file is:
 
 ```
     ab45d9d9 de4a950d a97ae2b1 d20fb7c6 
@@ -33,22 +33,27 @@ Its URL is:
 https://ppot.blob.core.windows.net/public/challenge_0025
 ```
 
+Even if the next participant completes a contribution before the VDF is over,
+we will stick to the above challenge file.
+
 ### 2. The block hash
 
-We will use the Ethereum mainnet block hash of block #___ (TBD).
+We will use the hash of block
+[9689500](https://etherscan.io/block/countdown/9689500) on the Ethereum
+mainnet, which will be mined around March 17 2020, 21:40:06 GMT+0800.
 
 ### 3. The VDF
 
 We will generate the random beacon. We use the VDF Alliance's verifiable delay
 function, with the [RSA-2048
 modulus](https://en.wikipedia.org/wiki/RSA_numbers#RSA-2048). We will run the
-VDF for a duration of 6000 minutes on the above Ethereum block hash.  We choose
+VDF for a duration of 6000 minutes on the above Ethereum block hash. We choose
 6000 minutes to be on the safe side - assuming an Ethereum block hash is
 considered to be somewhat final after 6 minutes, we could take a 6 minute VDF,
 if the VDF was optimal. While the current VDF service for 2048 bits already use
 an optimized implementation on an FPGA, it's still in progress, so we assume
 that a motivated attacker could develop a better one, with an extreme 1000x
-advantage, so we run the VDF for `6 * 1000` minutes instead.
+advantage, so we will run the VDF for `6 * 1000` minutes instead.
 
 The block hash is:
 
@@ -71,39 +76,61 @@ mpz_set_str(
 );
 ```
 
-We collaborated with [Supranational](https://www.supranational.net/), a member
-of the [VDF Alliance](https://www.vdfalliance.org/), to compute the VDF. The
-output of the VDF (4044943820224 iterations, which takes 6000 minutes) is:
+We will collaborate with [Supranational](https://www.supranational.net/), a
+member of the [VDF Alliance](https://www.vdfalliance.org/), to compute the VDF.
+The output of the VDF (4044943820224 iterations, which takes 6000 minutes) is:
 
 ```
 (TBD)
 ```
 
-Use [verify_proof.py](./verify_proof.py) to verify the VDF proof. This follows the
-[proof of correctness by Wesolowski](https://eprint.iacr.org/2018/623.pdf).
+They will provide [verify_proof.py](./verify_proof.py) to verify the VDF proof.
+This follows the [proof of correctness by
+Wesolowski](https://eprint.iacr.org/2018/623.pdf).
 
 
-4. The SHA256 hashes
+4. The final output
 
-We will run `2 ^ 42 = 4398046511104` rounds of the SHA256 hash algorithm to the
-SHA256 hash of the output and use the result as our random beacon. The SHA256
-hash of the VDF output is `(TBD)`, and we use
-[`verify-beacon`](https://github.com/kobigurk/verify-beacon) to perform the
-iterated hashes. The process will take about 58 hours using an AMD EPYC 7401P
-24-Core Processor @ 2.0GHz.
+We will *not* apply iterated SHA256 hashes to the output of the VDF. 
 
-The final hash is:
+We will only apply one SHA256 hash to the VDF output so that we can get a
+32-byte value which the `beacon_constrained` program requires.
 
+
+To convert the VDF output (e.g. the decimal 12345....), we will use the
+following Python 3 code:
+
+```python3
+import hashlib
+
+vdf_output = hex(12345....)
+
+m = hashlib.sha256()
+m.update(bytes.fromhex(vdf_output[2:]))
+sha256_input = m.digest()
+
+print(sha256_input.hex())
 ```
-(TBD)
-```
 
-Anyone can use `verify-beacon` to quickly verify the final hash (as the
-`verify` program performs the checks in parallel).
+<!--We will run `2 ^ 42 = 4398046511104` rounds of the SHA256 hash algorithm to the-->
+<!--SHA256 hash of the output and use the result as our random beacon. The SHA256-->
+<!--hash of the VDF output is `(TBD)`, and we use-->
+<!--[`verify-beacon`](https://github.com/kobigurk/verify-beacon) to perform the-->
+<!--iterated hashes. The process will take about 58 hours using an AMD EPYC 7401P-->
+<!--24-Core Processor @ 2.0GHz.-->
 
-```bash
-./target/release/verify < ppot_output.txt
-```
+<!--The final hash is:-->
+
+<!--```-->
+<!--(TBD)-->
+<!--```-->
+
+<!--Anyone can use `verify-beacon` to quickly verify the final hash (as the-->
+<!--`verify` program performs the checks in parallel).-->
+
+<!--```bash-->
+<!--./target/release/verify < ppot_output.txt-->
+<!--```-->
 
 While the Semaphore team will not use this output as the random beacon, we will
 release it for other teams if they so choose to use it.
