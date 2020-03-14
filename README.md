@@ -18,7 +18,20 @@ TODO
 ### 1. The challenge file
 
 We will use the 26th challenge file from the Perpetual Powers of Tau ceremony
-as the starting point (challenge file hash TBD).
+as the starting point. The Blake2b hash of the challenge file is:
+
+```
+    ab45d9d9 de4a950d a97ae2b1 d20fb7c6 
+    1b6d1098 6cb02d41 8a8be0c6 4e2c99d6 
+    c000a914 c03d9ab2 71ee07c0 990a41fb 
+    56971420 2c380711 d722350c c19a1152
+```
+
+Its URL is:
+
+```
+https://ppot.blob.core.windows.net/public/challenge_0025
+```
 
 ### 2. The block hash
 
