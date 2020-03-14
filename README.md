@@ -13,63 +13,98 @@ TODO
 <!--|-|-|-|-|-->
 <!--| 0001 | Koh Wei Jie | [Keybase](https://keybase.io/contactkohweijie) | [0001_weijie_response](./0001_weijie_response/README.md) |-->
 
-## How we will prepare for the ceremony
+## How we will run the ceremony
 
-We will use the 26th challenge file from the Perpetual Powers of
-Tau ceremony as the starting point (challenge file hash TBD).
+### 1. The challenge file
 
-We will apply a random beacon. We use the VDF Alliance's verifiable delay
+We will use the 26th challenge file from the Perpetual Powers of Tau ceremony
+as the starting point (challenge file hash TBD).
+
+### 2. The block hash
+
+We will use the Ethereum mainnet block hash of block #___ (TBD).
+
+### 3. The VDF
+
+We will generate the random beacon. We use the VDF Alliance's verifiable delay
 function, with the [RSA-2048
 modulus](https://en.wikipedia.org/wiki/RSA_numbers#RSA-2048). We will run the
-VDF for a duration of 6000 minutes on an Ethereum block hash which we'll
-announce. We choose 6000 minutes to be on the safe side - assuming an Ethereum
-block hash is considered to be somewhat final after 6 minutes, we could take a
-6 minute VDF, if the VDF was optimal. While the current VDF service for 2048
-bits already use an optimized implementation on an FPGA, it's still in
-progress, so we assume that a motivated attacker could develop a better one,
-with an extreme 1000x advantage, so we run the VDF for `6 * 1000` minutes
-instead.
-
-As such, we will choose the VDF output of the blockhash of block 9619000.
+VDF for a duration of 6000 minutes on the above Ethereum block hash.  We choose
+6000 minutes to be on the safe side - assuming an Ethereum block hash is
+considered to be somewhat final after 6 minutes, we could take a 6 minute VDF,
+if the VDF was optimal. While the current VDF service for 2048 bits already use
+an optimized implementation on an FPGA, it's still in progress, so we assume
+that a motivated attacker could develop a better one, with an extreme 1000x
+advantage, so we run the VDF for `6 * 1000` minutes instead.
 
 The block hash is:
 
 ```
-0x35ffdfc6198abafc21076172b0fb01c4eaf3d15d11a74e6df287ba2694e70b08
+(TBD)
 ```
 
 And the decimal used:
 
 ```
-24424671406626258651438443984939281088426878021704265060668075761164561615624
+(TBD)
 ```
 
-The value is fed into the VDF calculation using this snippet:
+The value will be fed into the VDF calculation using this snippet:
 ```
 mpz_set_str(
     x_in,
-    "35ffdfc6198abafc21076172b0fb01c4eaf3d15d11a74e6df287ba2694e70b08",
+    "(TBD)",
     16
 );
 ```
 
 We collaborated with [Supranational](https://www.supranational.net/), a member
 of the [VDF Alliance](https://www.vdfalliance.org/), to compute the VDF. The
-output of the VDF (4044943820224 iterations, which take 6000 minutes) is:
+output of the VDF (4044943820224 iterations, which takes 6000 minutes) is:
 
 ```
-19144252799650690034532093004610517021943100624121228597352889552995687583621339173190502851029907816310407126300686460714009475968112570316274914525310332357507812899123293094648071211640233190710113953260309441777021673998373218670925180551926263064212339548461470232903440429813254769673580307982104275746012049516178273456199635063347683510167860883901215428056724337210897211547353523524300903538679417056679618824614750731361045253660460133221495280406246845045128191812422560355330733281117986696463831747104084345232282788677597701004579630458791913453885010191791670442208877522732218605629867820033633850103
+(TBD)
 ```
 
-Use [verify_proof.py](this script) to verify the VDF proof. This follows the [proof of correctness by Wesolowski](https://eprint.iacr.org/2018/623.pdf).
+Use [verify_proof.py](./verify_proof.py) to verify the VDF proof. This follows the
+[proof of correctness by Wesolowski](https://eprint.iacr.org/2018/623.pdf).
 
-- Using the `ppot_fix` branch of
-  [phase2-bn254](https://github.com/kobigurk/phase2-bn254) (commit hash 52a9479810f583c58156db292c0a3762ee790af7), we will modify
-  the source code (as the random beacon is hardcoded), rebuild the
-  binaries, and use `beacon_constrained` to produce a `response`.
 
-- Also using `ppot_fix`, we will run the `prepare_phase2` binary to
-  generate radix files up to `phase1radix2m16`.
+4. The SHA256 hashes
+
+We will run `2 ^ 42 = 4398046511104` rounds of the SHA256 hash algorithm to the
+SHA256 hash of the output and use the result as our random beacon. The SHA256
+hash of the VDF output is `(TBD)`, and we use
+[`verify-beacon`](https://github.com/kobigurk/verify-beacon) to perform the
+iterated hashes. The process will take about 58 hours using an AMD EPYC 7401P
+24-Core Processor @ 2.0GHz.
+
+The final hash is:
+
+```
+(TBD)
+```
+
+Anyone can use `verify-beacon` to quickly verify the final hash (as the
+`verify` program performs the checks in parallel).
+
+```bash
+./target/release/verify < ppot_output.txt
+```
+
+While the Semaphore team will not use this output as the random beacon, we will
+release it for other teams if they so choose to use it.
+
+### 5. Applying the beacon
+
+Using the `ppot_fix` branch of
+[phase2-bn254](https://github.com/kobigurk/phase2-bn254) (commit hash
+52a9479810f583c58156db292c0a3762ee790af7), we will modify the source code (as
+the random beacon is hardcoded), rebuild the binaries, and use
+`beacon_constrained` to produce a `response`.
+
+Also using `ppot_fix`, we will run the `prepare_phase2` binary to generate
+radix files up to `phase1radix2m16`.
 
 Next, we will initialise the phase2 ceremony.
 
