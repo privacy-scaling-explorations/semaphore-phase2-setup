@@ -61,24 +61,32 @@ The block hash is:
 (TBD)
 ```
 
-And the decimal used:
+The above block hash as a decimal is:
 
 ```
-(TBD)
+1234...
 ```
 
-The value will be fed into the VDF calculation using this snippet:
+We will convert the above block hash to a decimal using this Python3 snippet:
+
+```python3
+print(int('0xabcd...', 16))
+```
+
+The decimal will be fed into the VDF using this snippet:
+
 ```
 mpz_set_str(
     x_in,
-    "(TBD)",
+    "1234...",
     16
 );
 ```
 
 We will collaborate with [Supranational](https://www.supranational.net/), a
 member of the [VDF Alliance](https://www.vdfalliance.org/), to compute the VDF.
-The output of the VDF (4044943820224 iterations, which takes 6000 minutes) is:
+The output of the VDF (4044943820224 iterations, which takes roughly 6000
+minutes) is:
 
 ```
 (TBD)
