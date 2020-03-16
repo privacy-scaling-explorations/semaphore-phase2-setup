@@ -13,7 +13,7 @@ TODO
 <!--|-|-|-|-|-->
 <!--| 0001 | Koh Wei Jie | [Keybase](https://keybase.io/contactkohweijie) | [0001_weijie_response](./0001_weijie_response/README.md) |-->
 
-## How we will run the ceremony
+## Ceremony process
 
 ### 1. The challenge file
 
@@ -21,10 +21,10 @@ We will use the following challenge file from the Perpetual Powers of Tau
 ceremony as the starting point. The Blake2b hash of the challenge file is:
 
 ```
-    ab45d9d9 de4a950d a97ae2b1 d20fb7c6 
-    1b6d1098 6cb02d41 8a8be0c6 4e2c99d6 
-    c000a914 c03d9ab2 71ee07c0 990a41fb 
-    56971420 2c380711 d722350c c19a1152
+ab45d9d9 de4a950d a97ae2b1 d20fb7c6 
+1b6d1098 6cb02d41 8a8be0c6 4e2c99d6 
+c000a914 c03d9ab2 71ee07c0 990a41fb 
+56971420 2c380711 d722350c c19a1152
 ```
 
 Its URL is:
@@ -39,8 +39,13 @@ we will stick to the above challenge file.
 ### 2. The block hash
 
 We will use the hash of block
-[9689500](https://etherscan.io/block/countdown/9689500) on the Ethereum
-mainnet, which will be mined around March 17 2020, 21:40:06 GMT+0800. We then interpret the block hash as a big-endian number, which is used as an input to the VDF as a decimal number. The block hash can be obtained with a synced Geth node from the v1.9.12 release (commit hash b6f1c8dcc058a936955eb8e5766e2962218924bc) using `eth.getBlock(9689500).hash`.
+[XXXXX](https://etherscan.io/block/countdown/XXXXX) on the Ethereum
+mainnet, which will be mined around `<INSERT DATE AND TIME>`. We chose this particular block height as:
+
+1. It is at between 1 and 3 days in the future relative to the date that we will announce it.
+2. It is rounded to a multiple of 1000.
+
+We then interpret the block hash as a big-endian number, which is used as an input to the VDF as a decimal number. The block hash can be obtained with a synced Geth node from the v1.9.12 release (commit hash `b6f1c8dcc058a936955eb8e5766e2962218924bc`) using `eth.getBlock(9689500).hash`.
 
 ### 3. The VDF
 
@@ -53,20 +58,20 @@ We assume the following:
 1. An Ethereum block hash is considered final after 30 blocks, which are roughly 6 minutes.
 2. The RSA-2048 modulus is not factorizable.
 
-\[TO be updated after Supranational's response on a single squaring time\]
-We will run the VDF for 360000000000000 iterations (6*60*10^12). If an attacker can do squarings in the RSA group no faster than Y nanoseconds, where Y <= 0.1ns, then an attacker could not affect the chosen block hash and therefore the random number is unbiased. 
+\[To be updated after Supranational's response on a single squaring time\]
+We will run the VDF for 360000000000000 iterations (`6 * 60 * 10 ^ 12`). If an attacker can do squarings in the RSA group no faster than `Y` nanoseconds, where `Y <= 1ns`, then an attacker could not affect the chosen block hash and therefore the random number is unbiased. 
 
 \[Note: We will run the VDF for a duration of 6000 minutes. We choose
 6000 minutes to be on the safe side - we could take a 6 minute VDF,
 if the VDF was optimal. While the current VDF service for 2048 bits already use
 an optimized implementation on an FPGA, it's still in progress, so we assume
 that a motivated attacker could develop a better one, with an extreme 1000x
-advantage, so we will run the VDF for `6 * 1000` minutes instead.\]
+advantage, so we will run the VDF for 6 * 1000 minutes instead.\]
 
-The block hash is:
+The block hash is (an example for now is `0xabcd...`):
 
 ```
-(TBD)
+0xabcd...
 ```
 
 The above block hash as a decimal is:
@@ -99,26 +104,25 @@ The output of the VDF is:
 (TBD)
 ```
 
-It is the integer resulting for the repeated squarings, modulo floor(N/2), where N is the RSA-2048 modulus.
+It is the integer resulting for the repeated squarings, modulo `floor(N/2)`, where `N` is the RSA-2048 modulus.
 
 We provide [verify_proof.py](./verify_proof.py) to verify the VDF proof.
 This follows the [proof of correctness by
 Wesolowski](https://eprint.iacr.org/2018/623.pdf).
 
-
-4. The final output
+### 4. The final output
 
 We will only apply one SHA256 hash to the VDF output, interpreted as a big-endian integer, so that we can get a
 32-byte value which the `beacon_constrained` program requires. We input it as a byte array to SHA256.
 
 \[Note: In contrast to the previous run, we will *not* apply iterated SHA256 hashes to the output of the VDF. \]
 
-To convert the VDF output (e.g. the decimal 12345....), we will use the following Python 3 code:
+To convert the VDF output (e.g. the decimal 12345....), we will use the following Python 3 code, which will print the hash to the console as a hexadecimal value:
 
 ```python3
 import hashlib
 
-vdf_output = hex(12345....)
+vdf_output = hex(1234...)
 
 m = hashlib.sha256()
 m.update(bytes.fromhex(vdf_output[2:]))
@@ -127,35 +131,20 @@ sha256_input = m.digest()
 print(sha256_input.hex())
 ```
 
-<!--We will run `2 ^ 42 = 4398046511104` rounds of the SHA256 hash algorithm to the-->
-<!--SHA256 hash of the output and use the result as our random beacon. The SHA256-->
-<!--hash of the VDF output is `(TBD)`, and we use-->
-<!--[`verify-beacon`](https://github.com/kobigurk/verify-beacon) to perform the-->
-<!--iterated hashes. The process will take about 58 hours using an AMD EPYC 7401P-->
-<!--24-Core Processor @ 2.0GHz.-->
-
-<!--The final hash is:-->
-
-<!--```-->
-<!--(TBD)-->
-<!--```-->
-
-<!--Anyone can use `verify-beacon` to quickly verify the final hash (as the-->
-<!--`verify` program performs the checks in parallel).-->
-
-<!--```bash-->
-<!--./target/release/verify < ppot_output.txt-->
-<!--```-->
-
-While the Semaphore team will not use this output as the random beacon, we will
-release it for other teams if they so choose to use it.
-
 ### 5. Applying the beacon
 
 Using the `ppot_fix` branch of
 [phase2-bn254](https://github.com/kobigurk/phase2-bn254) (commit hash
-52a9479810f583c58156db292c0a3762ee790af7), we will modify the source code (as
-the random beacon is hardcoded), rebuild the binaries, and use
+`52a9479810f583c58156db292c0a3762ee790af7`), we will modify the source code (as
+the random beacon is hardcoded):
+
+`powersoftau/src/bin/beacon_constrained.rs`, line 44:
+
+```
+let mut cur_hash: [u8; 32] = hex!("<the hex value>");
+```
+
+Next, we will rebuild the binaries, and use
 `beacon_constrained` to produce a `response`.
 
 Also using `ppot_fix`, we will run the `prepare_phase2` binary to generate
@@ -163,7 +152,7 @@ radix files up to `phase1radix2m16`.
 
 Next, we will initialise the phase2 ceremony.
 
-- Using the `master` branch of phase2-bn254 (commit hash 5d82e40bb7361d422ff6b68a733a14662a16aa05), we will run the `phase2` `new` binary: 
+- Using the `master` branch of phase2-bn254 (commit hash `5d82e40bb7361d422ff6b68a733a14662a16aa05`), we will run the `phase2` `new` binary: 
 
 ```bash
 cargo run --release --bin new circuit.json circom1.params
@@ -185,6 +174,8 @@ And send `circom<n+1>.params` to the next participant.
 
 When the UI is ready, we will verify all contributions and start from the latest
 `.params` file.
+
+
 
 At the end of the ceremony, we will generate the proving and verifying keys:
 
@@ -238,7 +229,7 @@ minute on a modern laptop.
 For convenience, we will use Dropbox to share the `.params` files. The
 coordinator will back them up to Azure blob storage and IPFS.
 
-## Test run
+## Test run (ignore this section)
 
 1. Cloned `phase2-bn254` and switched to the `ppot_fix` branch
 
