@@ -40,20 +40,28 @@ we will stick to the above challenge file.
 
 We will use the hash of block
 [9689500](https://etherscan.io/block/countdown/9689500) on the Ethereum
-mainnet, which will be mined around March 17 2020, 21:40:06 GMT+0800.
+mainnet, which will be mined around March 17 2020, 21:40:06 GMT+0800. We then interpret the block hash as a big-endian number, which is used as an input to the VDF as a decimal number. The block hash can be obtained with a synced Geth node from the v1.9.12 release (commit hash b6f1c8dcc058a936955eb8e5766e2962218924bc) using `eth.getBlock(9689500).hash`.
 
 ### 3. The VDF
 
-We will generate the random beacon. We use the VDF Alliance's verifiable delay
+We will generate a random value using VDF Alliance's verifiable delay
 function, with the [RSA-2048
-modulus](https://en.wikipedia.org/wiki/RSA_numbers#RSA-2048). We will run the
-VDF for a duration of 6000 minutes on the above Ethereum block hash. We choose
-6000 minutes to be on the safe side - assuming an Ethereum block hash is
-considered to be somewhat final after 6 minutes, we could take a 6 minute VDF,
+modulus](https://en.wikipedia.org/wiki/RSA_numbers#RSA-2048). 
+
+We assume the following:
+
+1. An Ethereum block hash is considered final after 30 blocks, which are roughly 6 minutes.
+2. The RSA-2048 modulus is not factorizable.
+
+\[TO be updated after Supranational's response on a single squaring time\]
+We will run the VDF for 360000000000 iterations (6*60*10^11). If an attacker can do squarings in the RSA group no faster than Y nanoseconds, where Y <= 1ns, then an attacker could not affect the chosen block hash and therefore the random number is unbiased. 
+
+\[Note: We will run the VDF for a duration of 6000 minutes. We choose
+6000 minutes to be on the safe side - we could take a 6 minute VDF,
 if the VDF was optimal. While the current VDF service for 2048 bits already use
 an optimized implementation on an FPGA, it's still in progress, so we assume
 that a motivated attacker could develop a better one, with an extreme 1000x
-advantage, so we will run the VDF for `6 * 1000` minutes instead.
+advantage, so we will run the VDF for `6 * 1000` minutes instead.\]
 
 The block hash is:
 
@@ -85,28 +93,27 @@ mpz_set_str(
 
 We will collaborate with [Supranational](https://www.supranational.net/), a
 member of the [VDF Alliance](https://www.vdfalliance.org/), to compute the VDF.
-The output of the VDF (4044943820224 iterations, which takes roughly 6000
-minutes) is:
+The output of the VDF is:
 
 ```
 (TBD)
 ```
 
-They will provide [verify_proof.py](./verify_proof.py) to verify the VDF proof.
+It is the integer resulting for the repeated squarings, modulo floor(N/2), where N is the RSA-2048 modulus.
+
+We provide [verify_proof.py](./verify_proof.py) to verify the VDF proof.
 This follows the [proof of correctness by
 Wesolowski](https://eprint.iacr.org/2018/623.pdf).
 
 
 4. The final output
 
-We will *not* apply iterated SHA256 hashes to the output of the VDF. 
+We will only apply one SHA256 hash to the VDF output, interpreted as a big-endian integer, so that we can get a
+32-byte value which the `beacon_constrained` program requires. We input it as a byte array to SHA256.
 
-We will only apply one SHA256 hash to the VDF output so that we can get a
-32-byte value which the `beacon_constrained` program requires.
+\[Note: In contrast to the previous run, we will *not* apply iterated SHA256 hashes to the output of the VDF. \]
 
-
-To convert the VDF output (e.g. the decimal 12345....), we will use the
-following Python 3 code:
+To convert the VDF output (e.g. the decimal 12345....), we will use the following Python 3 code:
 
 ```python3
 import hashlib
