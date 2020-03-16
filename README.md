@@ -131,7 +131,7 @@ sha256_input = m.digest()
 print(sha256_input.hex())
 ```
 
-### 5. Applying the beacon
+### 5. Applying the beacon to the final contribution of phase 1
 
 Using the `ppot_fix` branch of
 [phase2-bn254](https://github.com/kobigurk/phase2-bn254) (commit hash
@@ -150,7 +150,9 @@ Next, we will rebuild the binaries, and use
 Also using `ppot_fix`, we will run the `prepare_phase2` binary to generate
 radix files up to `phase1radix2m16`.
 
-Next, we will initialise the phase2 ceremony.
+### 6. Running phase 2
+
+Next, we will initialise the phase 2 ceremony.
 
 - Using the `master` branch of phase2-bn254 (commit hash `5d82e40bb7361d422ff6b68a733a14662a16aa05`), we will run the `phase2` `new` binary: 
 
@@ -175,12 +177,22 @@ And send `circom<n+1>.params` to the next participant.
 When the UI is ready, we will verify all contributions and start from the latest
 `.params` file.
 
+After ___ contributions, we will stop the ceremony and end up with a final `final.params` file.
 
+### 7. Applying another random beacon to the final contribution to phase 2
+
+We will run the above steps 2 - 4 (select a block hash, apply a VDF on it, and derive its hexadecimal value `<beacon hash>`), and then apply the hexadecimal value to the final `.params` file with 0 hash iterations:
+
+```bash
+cargo run --release --bin beacon final.params <beacon hash> 0 final_with_beacon.params`
+```
+
+### 8. Generate the proving and verifying keys
 
 At the end of the ceremony, we will generate the proving and verifying keys:
 
 ```bash
-cargo run --release --bin export_keys circom<final>.params verification_key.json pk.json
+cargo run --release --bin export_keys final_with_beacon.params verification_key.json pk.json
 
 cargo run --release --bin copy_json proving_key.json pk.json transformed_pk.json
 
