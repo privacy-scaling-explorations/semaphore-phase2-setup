@@ -54,7 +54,7 @@ We assume the following:
 2. The RSA-2048 modulus is not factorizable.
 
 \[TO be updated after Supranational's response on a single squaring time\]
-We will run the VDF for 360000000000 iterations (6*60*10^11). If an attacker can do squarings in the RSA group no faster than Y nanoseconds, where Y <= 1ns, then an attacker could not affect the chosen block hash and therefore the random number is unbiased. 
+We will run the VDF for 360000000000000 iterations (6*60*10^12). If an attacker can do squarings in the RSA group no faster than Y nanoseconds, where Y <= 0.1ns, then an attacker could not affect the chosen block hash and therefore the random number is unbiased. 
 
 \[Note: We will run the VDF for a duration of 6000 minutes. We choose
 6000 minutes to be on the safe side - we could take a 6 minute VDF,
