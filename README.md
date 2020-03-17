@@ -55,24 +55,41 @@ We then interpret the block hash as a big-endian number, which is used as an inp
 
 ### 3. The VDF
 
-We will generate a random value using VDF Alliance's verifiable delay
+We will generate a random value using VDF Alliance's RSA-based verifiable delay
 function, with the [RSA-2048
 modulus](https://en.wikipedia.org/wiki/RSA_numbers#RSA-2048). 
 
+The VDF uses repeated squaring modulo the RSA-2048 modulus in the RSA quotient group, where elements and their negatives are considered the same. This is an example of a slow implementation of the VDF in Python:
+
+```python
+#!/usr/bin/python3
+
+block_hash = 0x35ffdfc6198abafc21076172b0fb01c4eaf3d15d11a74e6df287ba2694e70b08
+
+modulus = 25195908475657893494027183240048398571429282126204032027777137836043662020707595556264018525880784406918290641249515082189298559149176184502808489120072844992687392807287776735971418347270261896375014971824691165077613379859095700097330459748808428401797429100642458691817195118746121515172654632282216869987549182422433637259085141865462043576798423387184774447920739934236584823824281198163815010674810451660377306056201619676256133844143603833904414952634432190114657544454178424020924616515723350778707749817125772467962926386356373289912154831438167899885040445364023527381951378636564391212010397122822120720357
+
+iterations = 16
+
+result = block_hash
+for i in range(iterations):
+    result = result**2 % modulus
+
+if result > modulus/2:
+    result = modulus - result
+    
+print(result)
+```
+
 We assume the following:
 
-1. An Ethereum block hash is considered final after 30 blocks, which are roughly 6 minutes.
+1. An Ethereum block hash is considered final after roughly 6 minutes.
 2. The RSA-2048 modulus is not factorizable.
+3. The best adversary with an RSA ASIC can perform a squaring in the RSA group no faster than `0.1` nanoseconds.
 
 \[To be updated after Supranational's response on a single squaring time\]
-We will run the VDF for 360000000000000 iterations (`6 * 60 * 10 ^ 12`). If an attacker can do squarings in the RSA group no faster than `Y` nanoseconds, where `Y <= 1ns`, then an attacker could not affect the chosen block hash and therefore the random number is unbiased. 
+    We will run the VDF for 3600000000000 iterations. This number is derived from the amount of iterations the best adversary would have to run in order to get to `6` minutes - `(6*60*10^9 ns / (0.1 ns/iteration))`. Since the best attacker can do squarings in the RSA group no faster than `0.1` nanoseconds, then the attacker could not have affected the chosen block hash and therefore the random number is unbiased.
 
-\[Note: We will run the VDF for a duration of 6000 minutes. We choose
-6000 minutes to be on the safe side - we could take a 6 minute VDF,
-if the VDF was optimal. While the current VDF service for 2048 bits already use
-an optimized implementation on an FPGA, it's still in progress, so we assume
-that a motivated attacker could develop a better one, with an extreme 1000x
-advantage, so we will run the VDF for 6 * 1000 minutes instead.\]
+\[Note: The current RSA-based VDF implementation runs at about `88.9245` ns/iteration, therefore the duration it would take it to run is about 5335 minutes.\]
 
 The block hash is (an example for now is `0xabcd...`):
 
