@@ -27,6 +27,12 @@ c000a914 c03d9ab2 71ee07c0 990a41fb
 56971420 2c380711 d722350c c19a1152
 ```
 
+Its SHA256 hash is:
+
+```
+357d502815eed3bc031f19ef48baa358a321624eaa10aba8c6d09ff21290afc2
+```
+
 Its URL is:
 
 ```
