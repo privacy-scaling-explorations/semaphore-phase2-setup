@@ -86,6 +86,10 @@ t = int(proof['t'])
 r = int(proof['r'])
 y = int(proof['y'])
 pi = int(proof['pi'])
+
+if y > modulus/2:
+  print("ERROR: output is not in the quotient group")
+  errors += 1
   
 if pow(2, t, l) != r:
   print("ERROR: r does not match")
