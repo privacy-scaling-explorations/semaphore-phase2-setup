@@ -1,10 +1,33 @@
 # Multi-party trusted setup ceremony for Semaphore
 
-This is where the Semaphore team we will keep track of the phase 2 trusted
-setup.
+Before the [Semaphore zero-knowledge
+gadget](https://github.com/appliedzkp/semaphore) can be production-ready, the
+authors and the Ethereum community must perform a multi-party trusted setup to
+produce a proving key and verifying key. At least one ceremony participant must
+securely discard the toxic waste produced during the process in order for the
+final result to be trustworthy.
 
-The plan is to manually coordinate the ceremony while we complete a UI that
-automates this process.
+There are two phases to the ceremony: phase 1 and phase 2.
+
+Phase 1 is almost complete. We will use a challenge file (specified below) from
+the Perpetual Powers of Tau ceremony, which applies to any Groth16 zk-SNARK
+circuit with up to `2 ^ 28` constraints. What remains is to generate a random
+number (sometimes called a random beacon) which is to be applied to said
+challenge file. We will use a verifiable delay function (VDF) on an Ethereum
+(ETH1) mainnet block hash to produce this number.
+
+The goal is to produce a random number in such a way that an adversary cannot,
+within a certain timeframe, reasonably affect or bias this value in a way that
+favours them. We use an ETH1 mainnet block hash whose block height will be
+announced at least a day in advance as its value is sufficiently difficult to
+predict by an adversary.
+
+In phase 2, we will use the output of phase 1 as the starting point of a
+circuit-specific multi-party trusted setup. Like in phase 1, participants in
+this phase will take turns to make contributions. After the final phase 2
+participant submits their contribution, we will pick another block hash at
+least a day in advance, apply a VDF on it, and use the final output to produce
+a proving key and verifying key.
 
 ## Ceremony progress
 
@@ -18,13 +41,11 @@ TODO
 ### 1. The challenge file
 
 We will use the following challenge file from the Perpetual Powers of Tau
-ceremony as the starting point. The Blake2b hash of the challenge file is:
+ceremony as the starting point. The Blake2b hash of the challenge file,
+produced using the `b2sum -b` command, is:
 
 ```
-ab45d9d9 de4a950d a97ae2b1 d20fb7c6 
-1b6d1098 6cb02d41 8a8be0c6 4e2c99d6 
-c000a914 c03d9ab2 71ee07c0 990a41fb 
-56971420 2c380711 d722350c c19a1152
+ab45d9d9de4a950da97ae2b1d20fb7c61b6d10986cb02d418a8be0c64e2c99d6c000a914c03d9ab271ee07c0990a41fb569714202c380711d722350cc19a1152
 ```
 
 Its SHA256 hash is:
@@ -45,13 +66,17 @@ we will stick to the above challenge file.
 ### 2. The block hash
 
 We will use the hash of block
-[XXXXX](https://etherscan.io/block/countdown/XXXXX) on the Ethereum
-mainnet, which will be mined around `<INSERT DATE AND TIME>`. We chose this particular block height as:
+[XXXXX](https://etherscan.io/block/countdown/XXXXX) on the Ethereum mainnet,
+which will be mined around `<INSERT DATE AND TIME>`. We chose this particular
+block height as:
 
 1. It is at between 1 and 3 days in the future relative to the date that we will announce it.
 2. It is rounded to a multiple of 1000.
 
-We then interpret the block hash as a big-endian number, which is used as an input to the VDF as a decimal number. The block hash can be obtained with a synced Geth node from the v1.9.12 release (commit hash `b6f1c8dcc058a936955eb8e5766e2962218924bc`) using `eth.getBlock(9689500).hash`.
+We then interpret the block hash as a big-endian number, which is used as an
+input to the VDF as a decimal number. The block hash can be obtained with a
+synced Geth node from the v1.9.12 release (commit hash
+`b6f1c8dcc058a936955eb8e5766e2962218924bc`) using `eth.getBlock(9689500).hash`.
 
 ### 3. The VDF
 
@@ -86,10 +111,17 @@ We assume the following:
 2. The RSA-2048 modulus is not factorizable.
 3. The best adversary with an RSA ASIC can perform a squaring in the RSA group no faster than `0.1` nanoseconds.
 
-\[To be updated after Supranational's response on a single squaring time\]
-    We will run the VDF for 3600000000000 iterations. This number is derived from the amount of iterations the best adversary would have to run in order to get to `6` minutes - `(6*60*10^9 ns / (0.1 ns/iteration))`. Since the best attacker can do squarings in the RSA group no faster than `0.1` nanoseconds, then the attacker could not have affected the chosen block hash and therefore the random number is unbiased.
+\[To be updated after Supranational's response on a single squaring time\] 
+We will run the VDF for 3600000000000 iterations. This number is derived from
+the amount of iterations the best adversary would have to run in order to get
+to `6` minutes - `(6*60*10^9 ns / (0.1 ns/iteration))`. Since the best attacker
+can do squarings in the RSA group no faster than `0.1` nanoseconds, then the
+attacker could not have affected the chosen block hash and therefore the random
+number is unbiased.
 
-\[Note: The current RSA-based VDF implementation runs at about `88.9245` ns/iteration, therefore the duration it would take it to run is about 5335 minutes.\]
+\[Note: The current RSA-based VDF implementation runs at about `88.9245`
+ns/iteration, therefore the duration it would take it to run is about 5335
+minutes.\]
 
 The block hash is (an example for now is `0xabcd...`):
 
@@ -127,7 +159,8 @@ The output of the VDF is:
 (TBD)
 ```
 
-It is the integer resulting for the repeated squarings, modulo `floor(N/2)`, where `N` is the RSA-2048 modulus.
+It is the integer resulting for the repeated squarings, modulo `floor(N/2)`,
+where `N` is the RSA-2048 modulus.
 
 We provide [verify_proof.py](./verify_proof.py) to verify the VDF proof.
 This follows the [proof of correctness by
@@ -135,12 +168,16 @@ Wesolowski](https://eprint.iacr.org/2018/623.pdf).
 
 ### 4. The final output
 
-We will only apply one SHA256 hash to the VDF output, interpreted as a big-endian integer, so that we can get a
-32-byte value which the `beacon_constrained` program requires. We input it as a byte array to SHA256.
+We will only apply one SHA256 hash to the VDF output, interpreted as a
+big-endian integer, so that we can get a 32-byte value which the
+`beacon_constrained` program requires. We input it as a byte array to SHA256.
 
-\[Note: In contrast to the previous run, we will *not* apply iterated SHA256 hashes to the output of the VDF. \]
+\[Note: In contrast to the previous run, we will *not* apply iterated SHA256
+hashes to the output of the VDF. \]
 
-To convert the VDF output (e.g. the decimal 12345....), we will use the following Python 3 code, which will print the hash to the console as a hexadecimal value:
+To convert the VDF output (e.g. the decimal 12345....), we will use the
+following Python 3 code, which will print the hash to the console as a
+hexadecimal value:
 
 ```python3
 import hashlib
@@ -177,7 +214,9 @@ radix files up to `phase1radix2m16`.
 
 Next, we will initialise the phase 2 ceremony.
 
-- Using the `master` branch of phase2-bn254 (commit hash `5d82e40bb7361d422ff6b68a733a14662a16aa05`), we will run the `phase2` `new` binary: 
+- Using the `master` branch of phase2-bn254 (commit hash
+  `5d82e40bb7361d422ff6b68a733a14662a16aa05`), we will run the `phase2` `new`
+  binary: 
 
 ```bash
 cargo run --release --bin new circuit.json circom1.params
@@ -200,11 +239,15 @@ And send `circom<n+1>.params` to the next participant.
 When the UI is ready, we will verify all contributions and start from the latest
 `.params` file.
 
-After ___ contributions, we will stop the ceremony and end up with a final `final.params` file.
+After ___ contributions, we will stop the ceremony and end up with a final
+`final.params` file.
 
 ### 7. Applying another random beacon to the final contribution to phase 2
 
-We will run the above steps 2 - 4 (select a block hash, apply a VDF on it, and derive its hexadecimal value `<beacon hash>`), and then apply the hexadecimal value to the final `.params` file with 0 hash iterations:
+We will run the above steps 2 - 4 (select a block hash aat least a day in
+advance, apply a VDF on it, and derive its hexadecimal value `<beacon hash>`),
+and then apply the hexadecimal value to the final `.params` file with 0 hash
+iterations:
 
 ```bash
 cargo run --release --bin beacon final.params <beacon hash> 0 final_with_beacon.params`
