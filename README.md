@@ -244,7 +244,7 @@ After ___ contributions, we will stop the ceremony and end up with a final
 
 ### 7. Applying another random beacon to the final contribution to phase 2
 
-We will run the above steps 2 - 4 (select a block hash aat least a day in
+We will run the above steps 2 - 4 again with a new, pre-announced block hash (at least a day in
 advance, apply a VDF on it, and derive its hexadecimal value `<beacon hash>`),
 and then apply the hexadecimal value to the final `.params` file with 0 hash
 iterations:
