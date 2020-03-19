@@ -35,12 +35,27 @@ circuit-specific multi-party computation setup. Like in phase 1, participants in
 this phase will take turns to apply a secret random number to the previous
 participant's output.
 
-After the final phase 2 participant submits their contribution, we will pick another block hash at
-least a day in advance, apply a VDF on it, and use this final output to produce
-a proving key and verifying key for the Semaphore circuit defined in [this repository](https://github.com/appliedzkp/semaphore) at commit `a652d654ed992a0ace51b5345d4618e8f9be21ea`
-<where the `circuit.json` file has the SHA256 hash `XXXXXXXX`
-produced using `circom` vYYY on a Linux machine running ........ Additionally, the `constraints` field
-in said JSON file, located at **THIS URL** has SHA256 has `ZZZZZ`>.
+After the final phase 2 participant submits their contribution, we will pick
+another block hash at least a day in advance, apply a VDF on it, and use this
+final output to produce a proving key and verifying key for the Semaphore
+circuit defined in [this repository](https://github.com/appliedzkp/semaphore)
+at commit `a652d654ed992a0ace51b5345d4618e8f9be21ea` at
+`circuits/circom/semaphore.circom`.
+
+`circuit.json` has SHA256 hash
+`3c9e8106555fbe26f5606a5fd3213d436070395910afb82228df388c5296f2c2` and is located at this URL:
+
+```
+https://www.dropbox.com/s/3gzxjibqgb6ke13/circuit.json?dl=1
+```
+
+Note, however, that `circuit.json` is not deterministically generated, so if
+you recompile the circuit, the hash will differ. Its `constraints` attribute,
+however, is deterministic, and has the SHA256 hash
+`95fa431bdcdc99660e34943dda47134323978feaf41d22791b02a58c9af7896b`. Anyone can
+verify the hash of `constraints` using the
+[hash_circuit_and_constraints.py](./hash_circuit_and_constraints.py) Python 3
+script.
 
 ## Ceremony progress
 
