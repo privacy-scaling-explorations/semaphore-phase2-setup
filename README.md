@@ -94,8 +94,8 @@ we will stick to the above challenge file.
 ### 2. The block hash
 
 We will use the hash of block
-[XXXXX](https://etherscan.io/block/countdown/XXXXX) on the Ethereum mainnet,
-which will be mined around `<INSERT DATE AND TIME>`. We chose this particular
+[9730000](https://etherscan.io/block/countdown/9730000) on the Ethereum mainnet,
+which will be mined around Tue Mar 24 2020 05:14:35 GMT+0800. We chose this particular
 block height as:
 
 1. It is at between 1 and 3 days in the future relative to the date that we will announce it.
@@ -104,7 +104,7 @@ block height as:
 We then interpret the block hash as a big-endian number, which is used as an
 input to the VDF as a decimal number. The block hash can be obtained with a
 synced Geth node from the v1.9.12 release (commit hash
-`b6f1c8dcc058a936955eb8e5766e2962218924bc`) using `eth.getBlock(<BLOCK NUMBER>).hash`.
+`b6f1c8dcc058a936955eb8e5766e2962218924bc`) using `eth.getBlock(9730000).hash`.
 
 ### 3. The VDF
 
