@@ -225,7 +225,7 @@ sha256_input = m.digest()
 print(sha256_input.hex())
 ```
 
-### 5. Applying the public random value to the final contribution of phase 1
+### 5. Applying the public random value to the chosen challenge file of phase 1
 
 Using the `ppot_fix` branch of
 [phase2-bn254](https://github.com/kobigurk/phase2-bn254) (commit hash
@@ -239,7 +239,7 @@ let mut cur_hash: [u8; 32] = hex!("<the public random value>");
 ```
 
 Next, we will rebuild the binaries, and use the
-`beacon_constrained` program to produce a `response`.
+`beacon_constrained` program with the `challenge_0025` file to produce a `response`.
 
 Also using `ppot_fix`, we will run the `prepare_phase2` program to generate
 radix files up to `phase1radix2m16`, which supports running a phase2 ceremony
