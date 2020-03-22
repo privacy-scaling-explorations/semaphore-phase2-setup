@@ -251,7 +251,7 @@ for circuits up to `2 ^ 16` constraints
 Next, we will initialise the phase 2 ceremony.
 
 - Using the `master` branch of phase2-bn254 (commit hash
-  `5d82e40bb7361d422ff6b68a733a14662a16aa05`), we will run the `phase2` `new`
+  `5c1350358785474df5c47e0431720ddfdfd04ed6`), we will run the `phase2` `new`
   binary to create the first challenge file:
 
 ```bash
