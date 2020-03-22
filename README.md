@@ -68,8 +68,8 @@ TODO
 
 ### 1. The challenge file
 
-We will use the following challenge file from the Perpetual Powers of Tau
-ceremony as the starting point. The Blake2b hash of the challenge file,
+We will use a challenge file (`challenge_0025`) from the Perpetual Powers of Tau
+ceremony as the starting point. The Blake2b hash of the challenge file we will use,
 produced using the `b2sum -b` command, is:
 
 ```
@@ -88,8 +88,7 @@ Its URL is:
 https://ppot.blob.core.windows.net/public/challenge_0025
 ```
 
-Even if the next participant completes a contribution before the VDF is over,
-we will stick to the above challenge file.
+We will stick to the above challenge file even though new ones are available.
 
 ### 2. The block hash
 
