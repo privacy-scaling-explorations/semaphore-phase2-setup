@@ -157,22 +157,22 @@ number is unbiased.
 ns/iteration, therefore the duration it would take it to run is about 5335
 minutes.\]
 
-The block hash is (an example for now is `0xabcd...`):
+The block hash is:
 
 ```
-0xabcd...
+0xb8ba422c143fc4091be420a7702cdd814b6d7de7bba7f19ec4f546b97691194f
 ```
 
-The above block hash as a big endian decimal integer is (an example for now is `1234...`):
+The above block hash as a big endian decimal integer is:
 
 ```
-1234...
+83554654396998814025015691931508621990409003355162694699046114859281714059599
 ```
 
 We will convert the above block hash from hexadecimal to a decimal using this Python3 snippet:
 
 ```python3
-print(int('0xabcd...', 16))
+print(int('0xb8ba422c143fc4091be420a7702cdd814b6d7de7bba7f19ec4f546b97691194f', 16))
 ```
 
 The decimal will be fed into the VDF using this snippet:
@@ -180,7 +180,7 @@ The decimal will be fed into the VDF using this snippet:
 ```
 mpz_set_str(
     x_in,
-    "1234...",
+    "83554654396998814025015691931508621990409003355162694699046114859281714059599",
     10
 );
 ```
