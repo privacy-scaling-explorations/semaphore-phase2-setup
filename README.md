@@ -188,14 +188,15 @@ mpz_set_str(
 The output of the VDF is:
 
 ```
-(TBD)
+10977993103982121932239571465640301635762027965778194798910975354072884358350494172672647299765252840966576799178009376323650485178763413504349033403215382586241254899159195313346305695023748302468610424285905583247850388608587325650709157002017034725430299473131263305265832122359834767808351785119640714358834116601625436810622324602730551082077115422457111213950798926963774735333296895627587092632562291756198158559197379553015590673052743673005493881216459740346530146895497101358484528882909331921168487313102020250775017033237065548899535128240671163142253679430742485059665815423506876245572059454779721146064
 ```
 
 It is the integer `y` resulting from the repeated squarings such that if
 `y > N / 2`, we take `N - y` where `N` is the RSA-2048 modulus.
 
-Supranational will generate a proof of the VDF, and anyone can use
-[verify_proof.py](./verify_proof.py) to verify it. 
+Supranational has generated a proof of the VDF, and anyone can use
+[verify_proof.py](./verify_proof.py) to verify it. The proof is located at
+[proof.json](./proof.json).
 
 The proof follows the protocol described in
 [this paper by Wesolowski 2018](https://eprint.iacr.org/2018/623.pdf).
@@ -209,20 +210,25 @@ big-endian integer, so that we can get a 32-byte value which the
 \[Note: In contrast to the previous run, we will *not* apply iterated SHA256
 hashes to the output of the VDF. \]
 
-To convert the VDF output (e.g. the decimal `1234....`), we will use the
-following Python 3 code, which will print the hash to the console as a
-hexadecimal value:
+To convert the VDF output, we will use the following Python 3 code, which will
+print the hash to the console as a hexadecimal value:
 
 ```python3
 import hashlib
 
-vdf_output = hex(1234...)
+vdf_output = hex(10977993103982121932239571465640301635762027965778194798910975354072884358350494172672647299765252840966576799178009376323650485178763413504349033403215382586241254899159195313346305695023748302468610424285905583247850388608587325650709157002017034725430299473131263305265832122359834767808351785119640714358834116601625436810622324602730551082077115422457111213950798926963774735333296895627587092632562291756198158559197379553015590673052743673005493881216459740346530146895497101358484528882909331921168487313102020250775017033237065548899535128240671163142253679430742485059665815423506876245572059454779721146064)
 
 m = hashlib.sha256()
 m.update(bytes.fromhex(vdf_output[2:]))
 sha256_input = m.digest()
 
 print(sha256_input.hex())
+```
+
+The result is:
+
+```
+65ffc7bbb5bfa63765f0f5f869801498dfc1c182812fd6bdd6b7097b7ce7a059
 ```
 
 ### 5. Applying the public random value to the chosen challenge file of phase 1
@@ -235,7 +241,7 @@ the value is hardcoded):
 `powersoftau/src/bin/beacon_constrained.rs`, line 44:
 
 ```
-let mut cur_hash: [u8; 32] = hex!("<the public random value>");
+let mut cur_hash: [u8; 32] = hex!("65ffc7bbb5bfa63765f0f5f869801498dfc1c182812fd6bdd6b7097b7ce7a059");
 ```
 
 Next, we will rebuild the binaries, and use the
