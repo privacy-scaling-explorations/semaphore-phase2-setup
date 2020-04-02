@@ -294,6 +294,10 @@ Its IPFS content hash is:
 QmePgwdKEeJJznqPttGTMFsnGbRAUrqT9mQWtf1nvys53X
 ```
 
+Note: if anyone wishes to use a different radix file for their own phase2
+ceremony, a list of URLs of files up to phase1radix2m20 can be found here:
+[./radix_files.md](radix_files.md).
+
 ### 6. Running phase 2
 
 Next, we will initialise the phase 2 ceremony.
