@@ -261,7 +261,7 @@ https://ppot.blob.core.windows.net/public/response_semaphore_phase2
 
 Its IPFS content hash is:
 
-````
+```
 QmPZjPrWN42jQ7xVSibVwQXHEL7YSguFW3eweNYVsevkBh
 ```
 
