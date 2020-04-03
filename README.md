@@ -247,9 +247,52 @@ let mut cur_hash: [u8; 32] = hex!("65ffc7bbb5bfa63765f0f5f869801498dfc1c182812fd
 Next, we will rebuild the binaries, and use the
 `beacon_constrained` program with the `challenge_0025` file to produce a `response`.
 
+This `response` file has the Blake2b hash:
+
+```
+4acc62c551a677cf82b8590f04799aff8de37b7eef47b353abcb7c4a7896cd69554a35c5185ca7231dd0e1d4a982b226a3b465acd682ca6a7caaa8a98bde5cf2
+```
+
+Its URL is:
+
+```
+https://ppot.blob.core.windows.net/public/response_semaphore_phase2
+```
+
+Its IPFS content hash is:
+
+```
+QmPZjPrWN42jQ7xVSibVwQXHEL7YSguFW3eweNYVsevkBh
+```
+
 Also using `ppot_fix`, we will run the `prepare_phase2` program to generate
 radix files up to `phase1radix2m16`, which supports running a phase2 ceremony
 for circuits up to `2 ^ 16` constraints
+
+
+The `phase1radix2m16` has the Blake2b hash:
+
+```
+6a0c1f1a3b1732add6b6a1dec0f8bdff081e0d1f379d809c10dbbbff0546bfd6972b56594f6ffce74053e46b4beb4377ab18313edc654a0d0049c17088520070
+```
+
+Its SHA256 hash is:
+
+```
+576f4f179a27aad810cc8d876a2ca2c377b14032697b5c115b2abb5702975d84
+```
+
+Its URL is:
+
+```
+https://radix.blob.core.windows.net/public/phase1radix2m16
+```
+
+Its IPFS content hash is:
+
+```
+QmePgwdKEeJJznqPttGTMFsnGbRAUrqT9mQWtf1nvys53X
+```
 
 ### 6. Running phase 2
 
